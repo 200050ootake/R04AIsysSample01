@@ -1,4 +1,4 @@
-package jp.jc21.t.yoshizawa.WEB01;
+package jp.jc21.t.yoshizawa.WEB01.sentiment;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,19 +9,23 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
-public class Json05 {
+import jp.jc21.t.yoshizawa.WEB01.WebApiConnector;
+
+public class Sentiment {
 
 	public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
-		Language message = getLanguage("Stepover Toehold With Facelock");
+		Language message = getSentiment("Stepover Toehold With Facelock");
 		if (message != null) {
-			System.out.println(message.documents[0].detectedLanguage.name);
+			System.out.println("positive:"+message.documents[0].confidenceScores.positive);
+			System.out.println("neutral:"+message.documents[0].confidenceScores.neutral);
+			System.out.println("negative:"+message.documents[0].confidenceScores.negative);
 		}
 	}
 
-	static Language getLanguage(String s) throws IOException, URISyntaxException, InterruptedException {
+	static Language getSentiment(String s) throws IOException, URISyntaxException, InterruptedException {
 		Gson gson = new Gson();
 
-		String url = "https://r04jk3a04-text.cognitiveservices.azure.com/" + "text/analytics/v3.0/languages";
+		String url = "https://r04jk3a04-text.cognitiveservices.azure.com/" + "text/analytics/v3.0/sentiment";
 		Map<String, String> map = new HashMap<>();
 		map.put("Ocp-Apim-Subscription-Key", "b14f2cddb21342fcb9c10ee1b41b983b");
 
@@ -55,11 +59,14 @@ class Language {
 }
 
 class Documents {
-	DetectedLanguage detectedLanguage;
+	String sentiment;
+	ConfidenceScore 	confidenceScores;
 }
 
-class DetectedLanguage {
-	String name;
+class 	ConfidenceScore {
+	float positive;;
+	float neutral;;
+	float negative;;
 }
 
 class Source {
